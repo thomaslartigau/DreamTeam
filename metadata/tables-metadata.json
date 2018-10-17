@@ -1,0 +1,32 @@
+{
+	"DailyStatistics": {
+		"columns": [
+			{"columnName": "Rk", "type": "integer", "order": 1},
+			{"columnName": "Player", "type": "string", "order": 2},
+			{"columnName": "Tm", "type": "string", "order": 3},
+			{"columnName": "Unnamed: 3", "type": "string", "order": 4},
+			{"columnName": "Opp", "type": "string", "order": 5},
+			{"columnName": "Unnamed: 5", "type": "string", "order": 6},
+			{"columnName": "MP", "type": "integer", "order": 7},
+			{"columnName": "FG", "type": "integer", "order": 8},
+			{"columnName": "FGA", "type": "integer", "order": 9},
+			{"columnName": "FG%", "type": "float", "order": 10},
+			{"columnName": "3P", "type": "integer", "order": 11},
+			{"columnName": "3PA", "type": "integer", "order": 12},
+			{"columnName": "3P%", "type": "float", "order": 13},
+			{"columnName": "FT", "type": "integer", "order": 14},
+			{"columnName": "FTA", "type": "integer", "order": 15},
+			{"columnName": "FT%", "type": "float", "order": 16},
+			{"columnName": "ORB", "type": "integer", "order": 17},
+			{"columnName": "DRB", "type": "integer", "order": 18},
+			{"columnName": "TRB", "type": "integer", "order": 19},
+			{"columnName": "AST", "type": "integer", "order": 20},
+			{"columnName": "STL", "type": "integer", "order": 21},
+			{"columnName": "BLK", "type": "integer", "order": 22},
+			{"columnName": "TOV", "type": "integer", "order": 23},
+			{"columnName": "PF", "type": "integer", "order": 24},
+			{"columnName": "PTS", "type": "integer", "order": 25},
+			{"columnName": "GmSc", "type": "float", "order": 26}
+		]
+	}
+}
