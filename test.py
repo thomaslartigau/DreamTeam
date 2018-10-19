@@ -1,10 +1,18 @@
 # coding: utf-8
-import urllib2
+#import urllib2
 import pandas as pd
 import json
 from bs4 import BeautifulSoup
 
-url = "https://www.basketball-reference.com/friv/dailyleaders.fcgi?month=06&day=8&year=2018&type=all"
+day = 18
+month = 10
+year = 2018
+
+def get_url(day, month, year):
+	return("https://www.basketball-reference.com/friv/dailyleaders.fcgi?month=" + str(month) + "&day=" + str(day) + "&year=" + str(year) + "&type=all")
+
+def get_file_name(day, month, year):
+	return("daily_statistics/" + str(year) + str(month) + str(day) + "_daily_statistics.csv")
 
 def get_metadata(tableName):
 	with open('metadata/tables-metadata.json') as f:
@@ -12,18 +20,39 @@ def get_metadata(tableName):
 	return(metadatas[tableName])
 
 def get_columns_list(metadata):
-	metadata["columns"]
+	columns = metadata["columns"]
+	columns_ordered = sorted(columns, key=lambda c: c["order"])
+	columns_list = [ column["columnName"] for column in columns_ordered]
+	return(columns_list)
+
+def get_columns_type_dict(metadata):
+	columns = metadata["columns"]
+	columns_type = {}
+	for column in columns :
+		columns_type.update({column["columnName"] : column["type"]})
+	return(columns_type)
+
+def process_minute(MP) :
+	mins = MP.split(":")
+	return( float(int(mins[0]) + (1.0 * int(mins[1]) / 60)))
+
+def compute_evaluation(stats) :
+	return([0 for player in range(stats.shape[0])])
 
 try :
-	# statDF = pd.read_html(url, attrs={'id': 'stats'})[0]
-	# statDF = statDF[statDF.Rk != 'Rk']
-	# print(statDF.head())
-	# statDF.columns = ['Rk', 'Player', 'Tm', 'Unnamed: 3', 'Opp', 'Unnamed: 5', 'MP','FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%','ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS','GmSc']
-	# statDF = statDF.astype({'PTS': "int"})
-	# print(statDF.PTS.sum())
 	metadata = get_metadata("DailyStatistics")
-	metadata["columns"]
-	metadata.sort(key=metadata["columns"]["order"], reverse=True)
-	print(m)
+	statDF = pd.read_html(get_url(day, month, year), attrs={'id': 'stats'})[0]
+	statDF.columns = get_columns_list(metadata)
+
+	# Process the data
+	statDF = statDF[statDF.Rk != 'Rk']
+	statDF["MP"] = [process_minute(minute) for minute in statDF["MP"].values]
+	statDF = statDF.astype(get_columns_type_dict(metadata))
+
+	# Compute evaluation
+	statDF["Evaluation"] = compute_evaluation(statDF)
+
+	print(statDF.head())
+	statDF.to_csv(get_file_name(day, month, year))
 except ValueError :
-	print "Pas de donnees pour cette date"
+	print("Pas de donnees pour cette date")
