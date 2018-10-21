@@ -1,6 +1,8 @@
 # coding: utf-8
 #import urllib2
 import pandas as pd
+import requests
+from lxml import html
 import json
 from bs4 import BeautifulSoup
 
@@ -41,7 +43,8 @@ def compute_evaluation(stats) :
 
 try :
 	metadata = get_metadata("DailyStatistics")
-	statDF = pd.read_html(get_url(day, month, year), attrs={'id': 'stats'})[0]
+	url = get_url(day, month, year)
+	statDF = pd.read_html(url, attrs={'id': 'stats'})[0]
 	statDF.columns = get_columns_list(metadata)
 
 	# Process the data
@@ -53,6 +56,11 @@ try :
 	statDF["Evaluation"] = compute_evaluation(statDF)
 
 	print(statDF.head())
-	statDF.to_csv(get_file_name(day, month, year))
+	page = requests.get(url)
+	#https://docs.python-guide.org/scenarios/scrape/
+	tree = html.fromstring(page.content)
+	statDF["PlayerID"] = tree.xpath('//*[@id="stats"]/tbody/tr/td[1]/a/@href')
+	print(statDF["PlayerID"].values)
+	#statDF.to_csv(get_file_name(day, month, year))
 except ValueError :
 	print("Pas de donnees pour cette date")
