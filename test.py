@@ -61,6 +61,7 @@ try :
 	tree = html.fromstring(page.content)
 	statDF["PlayerID"] = tree.xpath('//*[@id="stats"]/tbody/tr/td[1]/a/@href')
 	print(statDF["PlayerID"].values)
+  # regex : /([a-z0-9]*).html
 	#statDF.to_csv(get_file_name(day, month, year))
 except ValueError :
 	print("Pas de donnees pour cette date")
