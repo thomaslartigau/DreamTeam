@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# usage: python3 test.py -m "{\"dates\": [\"2018-10-29\", \"2018-10-21\"], \"isRegen\": false}" 
+
 import pandas as pd
 import requests
 from lxml import html
