@@ -70,13 +70,13 @@ def get_daily_stats(year, month, day):
 			statDF["PlayerID"] = [re.findall(r"/([a-z0-9]*).html", playerID)[0] for playerID in statDF["PlayerID"].values]
 
 			#print(statDF.head())
-			statDF.to_csv(get_file_name(day, month, year), index = False, index_label = False)
-
+			return(statDF.to_csv(get_file_name(day, month, year), index = False, index_label = False), None)
+		
 		else : 
-			raise Exception("No data for this date : " + str(year) + "-" + str(month) + "-" + str(day))
-
+			return(None, Exception("No data for this date : " + str(year) + "-" + str(month) + "-" + str(day)))
+	
 	except ValueError :
-		raise Exception("No data for this date : " + str(year) + "-" + str(month) + "-" + str(day))
+		return(None, Exception("Error when crawling date: " + str(year) + "-" + str(month) + "-" + str(day)))
 
 def get_message():
 	parser = argparse.ArgumentParser(description='Get daily statistics from Basket-Reference')
@@ -106,4 +106,5 @@ if __name__ == '__main__':
 	dates, isRegen = handleMessage(message)
 	for date in dates :
 		year, month, day = get_detailed_date(date)
-		daily_stat = get_daily_stats(year, month, day)
+		daily_stat, exception = get_daily_stats(year, month, day)
+		print("Get daily stats for date : {}-{}-{}".format(year, month, day)) if exception == None else print(str(exception))
