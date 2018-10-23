@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# usage: python3 test.py -m "{\"dates\": [\"2018-10-29\", \"2018-10-21\"], \"isRegen\": false}" 
+# usage: python3 test.py -m "{\"dates\": [\"2018-10-29\", \"2018-10-21\"], \"isRegen\": false}"
 
 import pandas as pd
 import requests
@@ -54,7 +54,7 @@ def get_daily_stats(year, month, day):
 		url = get_url(day, month, year)
 		page = requests.get(url)
 		html_tree = html.fromstring(page.content)
-		
+
 		title_year, title_month, title_day = get_title_date(html_tree)
 		if title_year == year and title_month == month and title_day == day :
 			statDF = pd.read_html(url, attrs={'id': 'stats'})[0]
@@ -67,17 +67,17 @@ def get_daily_stats(year, month, day):
 
 			# Compute evaluation
 			statDF["Evaluation"] = compute_evaluation(statDF)
-			
+
 			# Get Player ID
 			statDF["PlayerID"] = html_tree.xpath('//*[@id="stats"]/tbody/tr/td[1]/a/@href')
 			statDF["PlayerID"] = [re.findall(r"/([a-z0-9]*).html", playerID)[0] for playerID in statDF["PlayerID"].values]
 
-			#print(statDF.head())
-			return(statDF.to_csv(get_file_name(day, month, year), index = False, index_label = False), None)
-		
-		else : 
+			statDF.to_csv(get_file_name(day, month, year), index = False, index_label = False)
+			return(statDF, None)
+
+		else :
 			return(None, Exception("No data for this date : " + str(year) + "-" + str(month) + "-" + str(day)))
-	
+
 	except ValueError :
 		return(None, Exception("Error when crawling date: " + str(year) + "-" + str(month) + "-" + str(day)))
 
